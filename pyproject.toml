@@ -1,0 +1,99 @@
+[tool.poetry]
+name = "django-online-education"
+version = "0.1.0"
+description = "Django-based online education platform"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "apps"}, {include = "imooc"}, {include = "extra_apps"}]
+
+[tool.poetry.dependencies]
+python = ">=3.6,<3.10"
+Django = "1.11.28"
+django-crispy-forms = "1.6.1"
+django-formtools = "2.0"
+httplib2 = "0.10.3"
+Pillow = "6.2.0"
+PyMySQL = "0.7.10"
+django-simple-captcha = "0.4.6"
+django-pure-pagination = "*"
+
+[tool.poetry.group.dev.dependencies]
+django-debug-toolbar = "*"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.11.0"
+pytest-django = "^4.5.2"
+
+[tool.poetry.scripts]
+test = "pytest:main"
+tests = "pytest:main"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "imooc.settings"
+python_files = ["tests.py", "test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+addopts = """
+    -v
+    --strict-markers
+    --tb=short
+    --cov=apps
+    --cov=imooc
+    --cov=extra_apps
+    --cov-branch
+    --cov-report=term-missing:skip-covered
+    --cov-report=html:htmlcov
+    --cov-report=xml:coverage.xml
+    --cov-fail-under=80
+"""
+markers = [
+    "unit: marks tests as unit tests",
+    "integration: marks tests as integration tests",
+    "slow: marks tests as slow running",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["apps", "imooc", "extra_apps"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__init__.py",
+    "*/admin.py",
+    "*/apps.py",
+    "manage.py",
+    "*/settings*.py",
+    "*/wsgi.py",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if settings.DEBUG:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
